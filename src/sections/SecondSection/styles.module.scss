@@ -30,7 +30,7 @@
         height: 4px;
         background: green;
         opacity: 0;
-        transition: opacity .3s;
+        transition: opacity 0.3s;
 
         &.visible {
           opacity: 1;
@@ -65,10 +65,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0) 100%
+    );
     opacity: 0;
     transform: translateY(64px);
-    transition: opacity .3s, transform .3s;
+    transition: opacity 0.3s, transform 0.3s;
 
     &.visible {
       opacity: 1;
