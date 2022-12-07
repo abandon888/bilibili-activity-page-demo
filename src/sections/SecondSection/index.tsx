@@ -18,14 +18,11 @@ import {
   Dropdown,
   Radio,
   TextArea,
-  Divider,
-  AutoCenter,
   Stepper,
   Switch,
 } from 'antd-mobile'
 import { useStore } from '../../store'
-import { keyboard } from '@testing-library/user-event/dist/keyboard'
-import FormItem from 'antd/es/form/FormItem'
+import { observer } from 'mobx-react-lite'
 
 const tabs = [
   {
@@ -69,17 +66,6 @@ const SecondSection: FC = () => {
   function delTask(id: number) {
     taskStore.delTask(id)
   }
-  // function addTask(e) {
-  //   if (e.keyCode === 13) {
-  //     taskStore.addTask({
-  //       id: uuid(),
-  //       name: taskValue,
-  //       isDone: false,
-  //     })
-  //     setTaskValue('')
-  //   }
-  // }
-
   const onFinish = (values: any) => {
     console.log(values)
     console.log(values.address)
@@ -242,12 +228,14 @@ const SecondSection: FC = () => {
             <div className="view">
               <label>{item.name}</label>
               <label>{item.address}</label>
-              <button
-                className="destroy"
+              <Button
+                color="primary"
                 onClick={() => delTask(item.id)}
                 //区分了一下当要传出网页中该结构的状态时比如checked的状态，要传e
                 //而如果仅仅时想传对象的状态什么的，应传item.
-              ></button>
+              >
+                删除
+              </Button>
             </div>
           </li>
         ))}
@@ -256,4 +244,4 @@ const SecondSection: FC = () => {
   )
 }
 
-export default SecondSection
+export default observer(SecondSection)
