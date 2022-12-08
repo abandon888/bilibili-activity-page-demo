@@ -14,7 +14,6 @@ const ThirdSection: FC = () => {
       <img src={Title2Image} alt="Title 1" />
 
       <img className={styles.comment} src={CommentImage} alt="Comment" />
-      <button>好的哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</button>
     </div>
   )
 }

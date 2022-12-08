@@ -1,26 +1,15 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import CartoonImage from '../../assets/cartoon.jpg'
-import MovieImage from '../../assets/movie.png'
-import LifeImage from '../../assets/life.jpg'
-import FoodImage from '../../assets/food.jpg'
-import LogoImage from '../../assets/logo.png'
+// import CartoonImage from '../../assets/cartoon.jpg'
+// import MovieImage from '../../assets/movie.png'
+// import LifeImage from '../../assets/life.jpg'
+// import FoodImage from '../../assets/food.jpg'
+// import LogoImage from '../../assets/logo.png'
 import './index.css'
 
 import styles from './styles.module.scss'
 import classNames from 'classnames'
 import { v4 as uuid } from 'uuid'
-import {
-  Button,
-  Form,
-  Input,
-  Popup,
-  Space,
-  Dropdown,
-  Radio,
-  TextArea,
-  Stepper,
-  Switch,
-} from 'antd-mobile'
+import { Button, Form, Input, List, Popup, Space, TextArea } from 'antd-mobile'
 import { useStore } from '../../store'
 import { observer } from 'mobx-react-lite'
 
@@ -28,22 +17,22 @@ const tabs = [
   {
     key: 'cartoon',
     title: '动画',
-    image: CartoonImage,
+    // image: CartoonImage,
   },
   {
     key: 'food',
     title: '美食',
-    image: FoodImage,
+    // image: FoodImage,
   },
   {
     key: 'movie',
     title: '电影',
-    image: MovieImage,
+    // image: MovieImage,
   },
   {
     key: 'life',
     title: '生活',
-    image: LifeImage,
+    // image: LifeImage,
   },
 ]
 
@@ -62,17 +51,18 @@ const SecondSection: FC = () => {
   const [isFixed, setIsFixed] = useState<boolean>(false)
   const [visible1, setVisible1] = useState(true)
   const secondSectionRef = useRef<HTMLDivElement>(null)
-
+  //删除
   function delTask(id: number) {
     taskStore.delTask(id)
   }
+  //提交后处理
   const onFinish = (values: any) => {
     console.log(values)
     console.log(values.address)
-    console.log(values.name)
+    console.log(values.name + '的墓地')
     taskStore.addTask({
       id: uuid(),
-      name: values.name,
+      name: values.name + '的墓地',
       address: values.address,
     })
   }
@@ -115,6 +105,18 @@ const SecondSection: FC = () => {
     <div className={styles.secondSection} ref={secondSectionRef}>
       {/* Tabs */}
       <ul className={classNames({ [styles.isFixed]: isFixed })}>
+        {taskStore.list.map((item) => (
+          <li key={item.id} onClick={() => activate(item.name)}>
+            <span>{item.name}</span>
+            <span
+              className={classNames(styles.line, {
+                [styles.visible]: activeTab === item.name,
+              })}
+            />
+          </li>
+        ))}
+      </ul>
+      {/* <ul className={classNames({ [styles.isFixed]: isFixed })}>
         {tabs.map((tab) => (
           <li key={tab.key} onClick={() => activate(tab.key)}>
             <span>{tab.title}</span>
@@ -125,24 +127,51 @@ const SecondSection: FC = () => {
             />
           </li>
         ))}
-      </ul>
+      </ul> */}
 
-      {/* Tab Content */}
-      <div>
-        {tabs.map((tab) => (
-          <section data-id={tab.key}>
+      {/* 类名标识 */}
+      <List header="墓碑列表">
+        {taskStore.list.map((item) => (
+          <section data-id={item.id}>
+            <List.Item
+              extra={
+                <Button
+                  color="primary"
+                  onClick={() => delTask(item.id)}
+                  //区分了一下当要传出网页中该结构的状态时比如checked的状态，要传e
+                  //而如果仅仅时想传对象的状态什么的，应传item.
+                >
+                  删除
+                </Button>
+              }>
+              {item.address}
+              {item.name}
+              <img src="src/assets/food.jpg" alt="#" />
+            </List.Item>
+          </section>
+          // <li className="todo" >
+          //   <div className="view">
+          //     <label>{item.name}</label>
+          //     <label>{item.address}</label>
+          //   </div>
+          // </li>
+        ))}
+      </List>
+      {/* <div>
+        {taskStore.list.map((item) => (
+          <section data-id={.key}>
             <h2>{tab.title}</h2>
             <img src={tab.image} alt={tab.key} />
           </section>
         ))}
-      </div>
+      </div> */}
 
       {/* 吸底按钮 */}
       <div
         className={classNames(styles.btnWrapper, {
           [styles.visible]: isFixed,
         })}>
-        <img src={LogoImage} alt="LOGO" />
+        {/* <img src={LogoImage} alt="LOGO" /> */}
         {/* 弹出层按钮 */}
         <Button
           onClick={() => {
@@ -169,27 +198,6 @@ const SecondSection: FC = () => {
                   </Button>
                 }>
                 <Form.Header>水平布局表单</Form.Header>
-                <Form.Item label="选择" name="choice">
-                  <Dropdown>
-                    <Dropdown.Item key="sorter" title="排序">
-                      <div style={{ padding: 12 }}>
-                        <Radio.Group defaultValue="default">
-                          <Space direction="vertical" block>
-                            <Radio block value="default">
-                              综合排序
-                            </Radio>
-                            <Radio block value="nearest">
-                              距离最近
-                            </Radio>
-                            <Radio block value="top-rated">
-                              评分最高
-                            </Radio>
-                          </Space>
-                        </Radio.Group>
-                      </div>
-                    </Dropdown.Item>
-                  </Dropdown>
-                </Form.Item>
                 <Form.Item
                   name="name"
                   label="姓名"
@@ -204,42 +212,11 @@ const SecondSection: FC = () => {
                     showCount
                   />
                 </Form.Item>
-                <Form.Item
-                  name="amount"
-                  label="数量"
-                  childElementPosition="right">
-                  <Stepper />
-                </Form.Item>
-                <Form.Item
-                  name="delivery"
-                  label="送货上门"
-                  childElementPosition="right">
-                  <Switch />
-                </Form.Item>
               </Form>
             </Space>
           </div>
         </Popup>
       </div>
-      <ul className="todo-list">
-        {/* 类名标识 */}
-        {taskStore.list.map((item) => (
-          <li className="todo" key={item.id}>
-            <div className="view">
-              <label>{item.name}</label>
-              <label>{item.address}</label>
-              <Button
-                color="primary"
-                onClick={() => delTask(item.id)}
-                //区分了一下当要传出网页中该结构的状态时比如checked的状态，要传e
-                //而如果仅仅时想传对象的状态什么的，应传item.
-              >
-                删除
-              </Button>
-            </div>
-          </li>
-        ))}
-      </ul>
     </div>
   )
 }
