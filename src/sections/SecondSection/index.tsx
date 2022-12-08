@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react'
 // import CartoonImage from '../../assets/cartoon.jpg'
-// import MovieImage from '../../assets/movie.png'
+import MovieImage from '../../assets/movie.png'
 // import LifeImage from '../../assets/life.jpg'
 // import FoodImage from '../../assets/food.jpg'
 // import LogoImage from '../../assets/logo.png'
@@ -9,32 +9,20 @@ import './index.css'
 import styles from './styles.module.scss'
 import classNames from 'classnames'
 import { v4 as uuid } from 'uuid'
-import { Button, Form, Input, List, Popup, Space, TextArea } from 'antd-mobile'
+import {
+  Button,
+  Form,
+  Input,
+  List,
+  Popup,
+  Space,
+  TextArea,
+  Image,
+  Dialog,
+  Selector,
+} from 'antd-mobile'
 import { useStore } from '../../store'
 import { observer } from 'mobx-react-lite'
-
-const tabs = [
-  {
-    key: 'cartoon',
-    title: '动画',
-    // image: CartoonImage,
-  },
-  {
-    key: 'food',
-    title: '美食',
-    // image: FoodImage,
-  },
-  {
-    key: 'movie',
-    title: '电影',
-    // image: MovieImage,
-  },
-  {
-    key: 'life',
-    title: '生活',
-    // image: LifeImage,
-  },
-]
 
 const TAB_HEIGHT = 56
 
@@ -44,10 +32,17 @@ const TAB_HEIGHT = 56
 // 4. 按钮吸底
 
 //使用弹窗
-
+window.onload = function () {
+  Dialog.alert({
+    content: '人在天边月上明',
+    onConfirm: () => {
+      console.log('Confirmed')
+    },
+  })
+}
 const SecondSection: FC = () => {
   const { taskStore } = useStore()
-  const [activeTab, setActiveTab] = useState<string>('cartoon')
+  const [activeTab, setActiveTab] = useState<string>('搞定mobx')
   const [isFixed, setIsFixed] = useState<boolean>(false)
   const [visible1, setVisible1] = useState(true)
   const secondSectionRef = useRef<HTMLDivElement>(null)
@@ -59,10 +54,10 @@ const SecondSection: FC = () => {
   const onFinish = (values: any) => {
     console.log(values)
     console.log(values.address)
-    console.log(values.name + '的墓地')
+    console.log(values.name + '的nomb')
     taskStore.addTask({
       id: uuid(),
-      name: values.name + '的墓地',
+      name: values.name + '的nomb',
       address: values.address,
     })
   }
@@ -115,64 +110,6 @@ const SecondSection: FC = () => {
             />
           </li>
         ))}
-      </ul>
-      {/* <ul className={classNames({ [styles.isFixed]: isFixed })}>
-        {tabs.map((tab) => (
-          <li key={tab.key} onClick={() => activate(tab.key)}>
-            <span>{tab.title}</span>
-            <span
-              className={classNames(styles.line, {
-                [styles.visible]: activeTab === tab.key,
-              })}
-            />
-          </li>
-        ))}
-      </ul> */}
-
-      {/* 类名标识 */}
-      <List header="墓碑列表">
-        {taskStore.list.map((item) => (
-          <section data-id={item.id}>
-            <List.Item
-              extra={
-                <Button
-                  color="primary"
-                  onClick={() => delTask(item.id)}
-                  //区分了一下当要传出网页中该结构的状态时比如checked的状态，要传e
-                  //而如果仅仅时想传对象的状态什么的，应传item.
-                >
-                  删除
-                </Button>
-              }>
-              {item.address}
-              {item.name}
-              <img src="src/assets/food.jpg" alt="#" />
-            </List.Item>
-          </section>
-          // <li className="todo" >
-          //   <div className="view">
-          //     <label>{item.name}</label>
-          //     <label>{item.address}</label>
-          //   </div>
-          // </li>
-        ))}
-      </List>
-      {/* <div>
-        {taskStore.list.map((item) => (
-          <section data-id={.key}>
-            <h2>{tab.title}</h2>
-            <img src={tab.image} alt={tab.key} />
-          </section>
-        ))}
-      </div> */}
-
-      {/* 吸底按钮 */}
-      <div
-        className={classNames(styles.btnWrapper, {
-          [styles.visible]: isFixed,
-        })}>
-        {/* <img src={LogoImage} alt="LOGO" /> */}
-        {/* 弹出层按钮 */}
         <Button
           onClick={() => {
             setVisible1(true)
@@ -202,7 +139,7 @@ const SecondSection: FC = () => {
                   name="name"
                   label="姓名"
                   rules={[{ required: true, message: '姓名不能为空' }]}>
-                  <Input onChange={console.log} placeholder="请输入姓名" />
+                  <Input placeholder="请输入姓名" />
                 </Form.Item>
                 <Form.Item name="address" label="地址" help="详情地址">
                   <TextArea
@@ -212,10 +149,87 @@ const SecondSection: FC = () => {
                     showCount
                   />
                 </Form.Item>
+                <Form.Item name="style" label="样式" required>
+                  <Selector
+                    options={[
+                      {
+                        label: '选项一',
+                        description: '描述信息',
+                        value: 'yes',
+                      },
+                      {
+                        label: '选项二',
+                        description: '描述信息',
+                        value: 'no',
+                      },
+                    ]}
+                  />
+                </Form.Item>
               </Form>
             </Space>
           </div>
         </Popup>
+      </ul>
+      {/* <ul className={classNames({ [styles.isFixed]: isFixed })}>
+        {tabs.map((tab) => (
+          <li key={tab.key} onClick={() => activate(tab.key)}>
+            <span>{tab.title}</span>
+            <span
+              className={classNames(styles.line, {
+                [styles.visible]: activeTab === tab.key,
+              })}
+            />
+          </li>
+        ))}
+      </ul> */}
+
+      {/* 类名标识 */}
+      <List header="墓碑列表">
+        {taskStore.list.map((item) => (
+          <section data-id={item.id}>
+            <List.Item
+              extra={
+                <Button
+                  color="primary"
+                  onClick={() =>
+                    Dialog.confirm({
+                      content: '确定要删除吗？',
+                      onConfirm: () => delTask(item.id),
+                    })
+                  }>
+                  删除
+                </Button>
+              }>
+              {item.address}
+              {item.name}
+            </List.Item>
+            <Image src={MovieImage}></Image>
+          </section>
+          // <li className="todo" >
+          //   <div className="view">
+          //     <label>{item.name}</label>
+          //     <label>{item.address}</label>
+          //   </div>
+          // </li>
+        ))}
+      </List>
+      {/* <div>
+        {taskStore.list.map((item) => (
+          <section data-id={.key}>
+            <h2>{tab.title}</h2>
+            <img src={tab.image} alt={tab.key} />
+          </section>
+        ))}
+      </div> */}
+
+      {/* 吸底按钮 */}
+      <div
+        className={classNames(styles.btnWrapper, {
+          [styles.visible]: isFixed,
+        })}>
+        {/* <img src={LogoImage} alt="LOGO" /> */}
+        {/* 弹出层按钮 */}
+        <Button>登录</Button>
       </div>
     </div>
   )

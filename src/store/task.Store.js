@@ -5,12 +5,12 @@ class TaskStore {
     {
       id: 1,
       name: '学习react',
-      address: "南昌"
+      address: "今天"
     },
     {
       id: 2,
       name: '搞定mobx',
-      address: "昌南"
+      address: "昨天"
     }
   ]
   constructor() {
